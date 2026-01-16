@@ -1,0 +1,972 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usetikzlibrary{patterns}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{array}
+\usepackage{hyperref}  % Hace los enlaces clickeables y en color
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black,
+}
+
+
+% --- CONTROL DE MÁRGENES ---
+\usepackage[
+  top=2.2cm,
+  bottom=2.5cm,
+  left=2.5cm,
+  right=2.5cm
+]{geometry}
+
+% --- CONTROL DEL TÍTULO ---
+\usepackage{titling}
+\setlength{\droptitle}{-2cm}
+
+
+% --- CONFIGURACIÓN DE PATRONES TIKZ (NUEVOS) ---
+
+\tikzset{
+pattern size/.store in=\mcSize, 
+pattern size = 5pt,
+pattern thickness/.store in=\mcThickness, 
+pattern thickness = 0.3pt,
+pattern radius/.store in=\mcRadius, 
+pattern radius = 1pt}
+
+\makeatletter
+% Definición del patrón para el estribo principal (actualizado)
+\pgfutil@ifundefined{pgf@pattern@name@_s98t32woy}{
+\pgfdeclarepatternformonly[\mcRadius,\mcThickness,\mcSize]{_s98t32woy}
+{\pgfpoint{-0.5*\mcSize}{-0.5*\mcSize}}
+{\pgfpoint{0.5*\mcSize}{0.5*\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{\tikz@pattern@color}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathcircle\pgfpointorigin{\mcRadius}
+\pgfusepath{stroke}
+}}
+
+% Definición del patrón para el detalle lateral (actualizado)
+\pgfutil@ifundefined{pgf@pattern@name@_642vxd5nb}{
+\pgfdeclarepatternformonly[\mcRadius,\mcThickness,\mcSize]{_642vxd5nb}
+{\pgfpoint{-0.5*\mcSize}{-0.5*\mcSize}}
+{\pgfpoint{0.5*\mcSize}{0.5*\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{\tikz@pattern@color}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathcircle\pgfpointorigin{\mcRadius}
+\pgfusepath{stroke}
+}}
+\makeatother
+
+\tikzset{every picture/.style={line width=0.75pt}} 
+
+% --- DATOS DEL DOCUMENTO ---
+% ============================================
+% PORTADA PROFESIONAL (MEJORADA)
+% ============================================
+% Reemplaza tu bloque de \title...\maketitle por esto.
+% (Mantiene tu preámbulo tal cual; solo agrega titlepage.)
+
+\title{EXERCISE ON REINFORCED CONCRETE}
+\author{Alexander Milkenson}
+\date{January 2026}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+
+    % -------- Encabezado institucional --------
+    {\Large\textsc{Civil Engineering}}\par
+    \vspace{0.15cm}
+    {\normalsize\textsc{Structural Analysis \& Design}}\par
+
+    \vspace{0.8cm}
+    \rule{0.85\textwidth}{0.6pt}\par
+    \vspace{1.2cm}
+
+    % -------- Título principal --------
+    {\Huge\bfseries Exercise Report\par}
+    \vspace{0.35cm}
+    {\LARGE\bfseries Reinforced Concrete Beam — Flexural Check\par}
+    \vspace{0.4cm}
+    {\large\itshape Under/Over-reinforced condition and ACI 318-14 verification\par}
+
+    \vspace{0.9cm}
+    \rule{0.60\textwidth}{0.6pt}\par
+
+    \vspace{1.4cm}
+
+    % -------- Gráfico minimalista --------
+    \begin{tikzpicture}[scale=0.95]
+        % Sección
+        \draw[line width=0.9pt] (0,0) rectangle (8,3);
+        % Estribo (marco interior)
+        \draw[line width=0.6pt] (0.45,0.45) rectangle (7.55,2.55);
+
+        % Acero inferior (3 barras)
+        \foreach \x in {2.1,4.0,5.9}{
+            \fill (\x,0.75) circle (0.12);
+        }
+        % Acero superior (2 barras)
+        \foreach \x in {3.1,4.9}{
+            \fill (\x,2.25) circle (0.12);
+        }
+
+        % Cotas simples
+        \draw[<->,>=stealth,line width=0.6pt] (0,-0.55) -- (8,-0.55);
+        \node[font=\small] at (4,-0.9) {$b = 30\ \mathrm{cm}$};
+
+        \draw[<->,>=stealth,line width=0.6pt] (-0.55,0) -- (-0.55,3);
+        \node[rotate=90,font=\small] at (-0.95,1.5) {$h = 50\ \mathrm{cm}$};
+
+        % Etiquetas discretas
+        \node[font=\footnotesize] at (4,0.25) {$3\,\#6$};
+        \node[font=\footnotesize] at (4,2.75) {$2\,\#5$};
+    \end{tikzpicture}
+
+    \vfill
+
+    % -------- Bloque tipo carátula --------
+    \begin{tcolorbox}[
+        colback=white,
+        colframe=black,
+        boxrule=0.9pt,
+        arc=0mm,
+        width=0.82\textwidth,
+        left=10pt,right=10pt,top=10pt,bottom=10pt
+    ]
+    \begin{tabular}{>{\bfseries}p{0.28\textwidth} p{0.68\textwidth}}
+        Report Title: & Exercise on Reinforced Concrete (ACI 318-14)\\
+        Topic: & Rectangular beam section — ductility and reinforcement limits\\
+        Author: & Alexander Milkenson\\
+        Date: & January 2026\\
+    \end{tabular}
+    \end{tcolorbox}
+
+    \vspace{0.8cm}
+\end{titlepage}
+
+% -------- Tabla de contenidos --------
+% ============================================
+% GENERAL INDEX (Centered, Blue, Professional)
+% ============================================
+
+\clearpage
+\thispagestyle{empty}
+
+% ---- Título centrado (ligeramente más arriba) ----
+\vspace*{0.28\textheight}
+\begin{center}
+    {\LARGE\bfseries\color{blue!70!black} GENERAL INDEX}
+\end{center}
+
+% ---- Separación controlada ----
+\vspace{1.2cm}
+
+% Elimina el título automático "Contents"
+\renewcommand{\contentsname}{}
+
+% Enlace correcto con hyperref
+\phantomsection
+\addcontentsline{toc}{section}{General Index}
+
+% ---- Índice ----
+\tableofcontents
+
+\clearpage
+
+% ============================================
+% Main document starts here
+% ============================================
+% \section{Introductory example}
+
+\section{Introductory example}
+\paragraph{Enunciado:}
+De la siguiente figura (Viga Rectangular), con:
+
+$$ f'_c = 210 \frac{kg}{cm^{2}} \quad \text{y} \quad f_y = 4200 \frac{kg}{cm^{2}} $$
+
+Determinar si la sección está sobrereforzada o subreforzada y si satisface a la norma ACI 318-14.
+\vspace{6mm}
+\begin{tcolorbox}[
+  colback=white,
+  colframe=green!60!black,
+  boxrule=0.9pt,
+  arc=0mm,
+  left=6pt,
+  right=6pt,
+  top=8pt,
+  bottom=6pt,
+  enhanced,
+  overlay unbroken={
+    \node[
+      fill=white,
+      draw=green!60!black,
+      line width=0.6pt,
+      text=green!60!black,
+      font=\footnotesize\bfseries,
+      inner sep=2pt
+    ] at ([xshift=8mm,yshift=3mm]frame.north west) {Milkenson};
+  }
+]
+\textbf{Problem Statement:}
+
+From the following figure (Rectangular Beam), with:
+
+\[
+f'_c = 210 \, \text{kg/cm}^2 \quad \text{and} \quad f_y = 4200 \, \text{kg/cm}^2
+\]
+
+Determine whether the section is \textbf{over-reinforced} or \textbf{under-reinforced}, and verify whether it \textbf{complies with ACI 318-14 provisions}.
+\end{tcolorbox}
+
+\begin{center}
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+
+
+
+% --- VIGA PRINCIPAL ---
+% Shape: Rectangle (Concreto)
+\draw  [color={rgb, 255:red, 128; green, 128; blue, 128 }  ,draw opacity=0.37 ][fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=0.51 ][line width=0.75]  (101.2,143.57) .. controls (100.1,143.58) and (99.2,142.69) .. (99.19,141.59) -- (98.25,19.15) .. controls (98.24,18.05) and (99.13,17.15) .. (100.23,17.14) -- (172.53,16.58) .. controls (173.63,16.58) and (174.54,17.46) .. (174.54,18.57) -- (175.48,141) .. controls (175.49,142.1) and (174.6,143.01) .. (173.5,143.02) -- cycle ;
+
+% Shape: Estribo (con patrón _s98t32woy)
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=0.47 ][pattern=_s98t32woy,pattern size=12.15pt,pattern thickness=0.75pt,pattern radius=0.75pt, pattern color={rgb, 255:red, 74; green, 74; blue, 74}][line width=0.75]  (156.13,24.28) .. controls (161.1,24.24) and (165.16,28.23) .. (165.2,33.21) -- (165.93,126.5) .. controls (165.97,131.47) and (161.97,135.53) .. (157,135.57) -- (117.6,135.88) .. controls (112.63,135.92) and (108.57,131.92) .. (108.53,126.95) -- (107.8,33.66) .. controls (107.76,28.69) and (111.76,24.62) .. (116.73,24.59) -- cycle ;
+
+% --- ACEROS DE REFUERZO ---
+% Círculos
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (153.5,128.5) .. controls (153.5,125.46) and (155.96,123) .. (159,123) .. controls (162.04,123) and (164.5,125.46) .. (164.5,128.5) .. controls (164.5,131.54) and (162.04,134) .. (159,134) .. controls (155.96,134) and (153.5,131.54) .. (153.5,128.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (154.5,112.5) .. controls (154.5,109.46) and (156.96,107) .. (160,107) .. controls (163.04,107) and (165.5,109.46) .. (165.5,112.5) .. controls (165.5,115.54) and (163.04,118) .. (160,118) .. controls (156.96,118) and (154.5,115.54) .. (154.5,112.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (133.5,128.5) .. controls (133.5,125.46) and (135.96,123) .. (139,123) .. controls (142.04,123) and (144.5,125.46) .. (144.5,128.5) .. controls (144.5,131.54) and (142.04,134) .. (139,134) .. controls (135.96,134) and (133.5,131.54) .. (133.5,128.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (109.5,129.5) .. controls (109.5,126.46) and (111.96,124) .. (115,124) .. controls (118.04,124) and (120.5,126.46) .. (120.5,129.5) .. controls (120.5,132.54) and (118.04,135) .. (115,135) .. controls (111.96,135) and (109.5,132.54) .. (109.5,129.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (109.5,112.5) .. controls (109.5,109.46) and (111.96,107) .. (115,107) .. controls (118.04,107) and (120.5,109.46) .. (120.5,112.5) .. controls (120.5,115.54) and (118.04,118) .. (115,118) .. controls (111.96,118) and (109.5,115.54) .. (109.5,112.5) -- cycle ;
+
+% --- DETALLE LATERAL ---
+\draw  [color={rgb, 255:red, 128; green, 128; blue, 128 }  ,draw opacity=0.37 ][fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=0.51 ][line width=0.75]  (189.34,87.49) .. controls (188.23,87.49) and (187.33,86.6) .. (187.32,85.5) -- (186.76,15.42) .. controls (186.75,14.31) and (187.64,13.41) .. (188.74,13.4) -- (232.4,13.08) .. controls (233.51,13.08) and (234.41,13.96) .. (234.42,15.07) -- (234.98,85.15) .. controls (234.99,86.26) and (234.1,87.16) .. (233,87.17) -- cycle ;
+% Con patrón _642vxd5nb
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=0.47 ][pattern=_642vxd5nb,pattern size=12.15pt,pattern thickness=0.75pt,pattern radius=0.75pt, pattern color={rgb, 255:red, 74; green, 74; blue, 74}][line width=0.75]  (219.53,17.61) .. controls (224.5,17.57) and (228.56,21.57) .. (228.6,26.54) -- (228.99,73.76) .. controls (229.03,78.73) and (225.03,82.79) .. (220.06,82.82) -- (202.21,82.96) .. controls (197.24,82.99) and (193.18,79) .. (193.14,74.03) -- (192.75,26.81) .. controls (192.71,21.84) and (196.7,17.78) .. (201.68,17.75) -- cycle ;
+\draw   (214.53,25.19) .. controls (219.47,20.01) and (224.61,17.28) .. (226.87,18.92) .. controls (229.04,20.5) and (227.89,25.63) .. (224.4,31.33) -- (222.8,31.46) .. controls (226.36,26.05) and (227.83,21.23) .. (226.07,19.95) .. controls (224.25,18.62) and (219.57,21.52) .. (214.96,26.6) -- cycle ;
+
+% --- LÍNEAS DE COTA ---
+\draw    (101,151.5) -- (174.5,151.99) ;
+\draw [shift={(176.5,152)}, rotate = 180.38] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (109,155.5) .. controls (105.46,153.18) and (101.93,151.81) .. (98.42,151.39) .. controls (101.92,150.86) and (105.39,149.37) .. (108.85,146.92) ;
+\draw    (89.04,141.22) -- (88.94,18.17) ;
+\draw [shift={(88.94,16.17)}, rotate = 89.95] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (92.97,128.01) .. controls (90.68,133.86) and (89.34,139.68) .. (88.95,145.49) .. controls (88.38,139.7) and (86.87,133.93) .. (84.4,128.17) ;
+\draw [color={rgb, 255:red, 139; green, 87; blue, 42 }  ,draw opacity=1 ]   (263.5,16.5) -- (228.97,22.65) ;
+\draw [shift={(227,23)}, rotate = 349.9] [color={rgb, 255:red, 139; green, 87; blue, 42 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% --- FLECHAS Y ETIQUETAS AZULES (NUEVO) ---
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (165.5,112.5) -- (200,112.59) ;
+\draw [shift={(203,112.6)}, rotate = 180.15] [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (164.5,128.5) -- (199,128.59) ;
+\draw [shift={(202,128.6)}, rotate = 180.15] [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+
+% --- TEXTOS ---
+\draw (106.5,163.4) node [anchor=north west][inner sep=0.75pt]    {$\textcolor[rgb]{0.82,0.01,0.11}{{\textstyle b=30\ cm}}$};
+\draw (8.5,60.9) node [anchor=north west][inner sep=0.75pt]    {$\textcolor[rgb]{0.82,0.01,0.11}{h=\ 50\ cm}$};
+\draw (256,5.9) node [anchor=north west][inner sep=0.75pt]    {$\textcolor[rgb]{0.82,0.01,0.11}{\phi 3/8"}$};
+\draw (202,104) node [anchor=north west][inner sep=0.75pt]   [align=left] {2 N°5};
+\draw (202,122) node [anchor=north west][inner sep=0.75pt]   [align=left] {3 N°6};
+
+\end{tikzpicture}
+\end{center}
+
+\section{Problem solution}
+To solve this type of problem, the following data are given:
+
+\begin{itemize}
+    \item Concrete compressive strength: $f'_c = 210\ \text{kg/cm}^2$
+    \item Yield strength of reinforcing steel: $f_y = 4200\ \text{kg/cm}^2$
+    \item First layer of reinforcement: $3\ \text{No.}\ 6$ bars
+    \item Second layer of reinforcement: $2\ \text{No.}\ 5$ bars
+
+\subsection{Table of Reinforcing Steel}
+
+The following table presents a reference summary of the diameters and designations of each reinforcing steel bar.
+\begin{table}[htbp]
+\centering
+{\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Bar}} &
+\multirow{2}{*}{\makecell{\textbf{Reference Diameter}\\\textbf{(inches)}}} &
+\multicolumn{3}{c|}{\textbf{Nominal Dimensions}} \\
+\cline{3-5}
+& & \textbf{Diameter (in)} & \textbf{Diameter (cm)} & \textbf{Nominal Area (cm$^2$)} \\
+\hline
+N°. 2  & 1/4"    & 0.25  & 0.64 & 0.32  \\
+\hline
+N°. 3  & 3/8"    & 0.375 & 0.95 & 0.71  \\
+\hline
+N°. 4  & 1/2"    & 0.50  & 1.27 & 1.29  \\
+\hline
+\rowcolor{yellow!30}
+N°. 5  & 5/8"    & 0.625 & 1.59 & 1.99  \\
+\hline
+\rowcolor{yellow!30}
+N°. 6  & 3/4"    & 0.75  & 1.91 & 2.87  \\
+\hline
+N°. 7  & 7/8"    & 0.875 & 2.22 & 3.87  \\
+\hline
+N°. 8  & 1"      & 1.00  & 2.54 & 5.07  \\
+\hline
+N°. 9  & 1-1/8"  & 1.125 & 2.87 & 6.45  \\
+\hline
+N°. 10 & 1-1/4"  & 1.25  & 3.23 & 8.19  \\
+\hline
+N°. 11 & 1-3/8"  & 1.375 & 3.58 & 10.06 \\
+\hline
+N°. 14 & 1-3/4"  & 1.75  & 4.30 & 14.52 \\
+\hline
+\end{tabular}
+}
+
+\caption{\textbf{Table 1.} Reinforcing steel bar designations and nominal geometric properties. Highlighted rows indicate the bars used in the design example.}
+\label{tab:reinforcing_steel}
+\end{table}
+
+
+\subsection{Conversion from inches to centimeters}
+
+The conversion from inches to centimeters is performed using the equivalence:
+
+\[
+1\ \text{in} = 2.54\ \text{cm}
+\]
+
+Therefore:
+
+\[
+\frac{3}{4}\,\text{in} \times 2.54\, \text{cm} = 1.91\ \text{cm}
+\]
+
+\[
+\frac{5}{8}\,\text{in} \times 2.54\, \text{cm}  = 1.59\ \text{cm}
+\]
+\subsection{Calculation of Cross-Sectional Area}
+
+The cross-sectional area of the reinforcing steel bars is calculated using the following expression:
+
+\[
+A = \frac{\pi d^2}{4}
+\]
+
+\paragraph{First layer of reinforcement (No. 6 bars):}
+
+For the first layer, the bar diameter is:
+
+\[
+d = 1.91 \, \text{cm}
+\]
+
+Thus, the cross-sectional area of one bar is:
+
+\[
+A_{b6} = \frac{\pi (1.91)^2}{4} = 2.87 \, \text{cm}^2
+\]
+
+Since the first layer consists of three N°.~6 bars, the total steel area of the first layer is:
+
+\[
+A_{s1} = 3 \times 2.87 = 8.61 \, \text{cm}^2
+\]
+
+\paragraph{Second layer of reinforcement (No. 5 bars):}
+
+For the second layer, the bar diameter is:
+
+\[
+d = 1.59 \, \text{cm}
+\]
+
+Thus, the cross-sectional area of one bar is:
+
+\[
+A_{b5} = \frac{\pi (1.59)^2}{4} = 1.99 \, \text{cm}^2
+\]
+
+Since the second layer consists of two N°.~5 bars, the total steel area of the second layer is:
+
+\[
+A_{s2} = 2 \times 1.99 = 3.98 \, \text{cm}^2
+\]
+
+\paragraph{Total area of tensile reinforcement:}
+
+The total area of tensile reinforcement is obtained by summing the contributions of both layers:
+
+\[
+A_s = A_{s1} + A_{s2} = 8.61 + 3.98 = 12.59 \, \text{cm}^2
+\]
+\subsection{Calculation of Effective Depth}
+
+\begin{tcolorbox}[
+  breakable,
+  colback=orange!12,
+  colframe=orange!65!black,
+  boxrule=0.9pt,
+  arc=1.5mm,
+  left=8pt,
+  right=8pt,
+  top=8pt,
+  bottom=8pt,
+  enhanced,
+  title=\textbf{Effective depth of reinforced beam},
+  fonttitle=\bfseries
+]
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\vspace{0pt}
+
+% --- FIGURA (TikZ) DENTRO DEL RECUADRO ---
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+
+%Shape: Rectangle (concreto)
+\draw  [color={rgb, 255:red, 128; green, 128; blue, 128 }  ,draw opacity=0.37 ]
+[fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=0.51 ][line width=0.75]
+(134.7,163.57) .. controls (133.6,163.58) and (132.7,162.69) .. (132.69,161.59)
+-- (131.75,39.15) .. controls (131.74,38.05) and (132.63,37.15) .. (133.73,37.14)
+-- (206.03,36.58) .. controls (207.13,36.58) and (208.04,37.46) .. (208.04,38.57)
+-- (208.98,161) .. controls (208.99,162.1) and (208.1,163.01) .. (207,163.02) -- cycle ;
+
+%Shape: Rectangle (estribo)
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=0.47 ]
+[pattern=_s98t32woy,pattern size=12.15pt,pattern thickness=0.75pt,pattern radius=0.75pt,
+ pattern color={rgb, 255:red, 74; green, 74; blue, 74}][line width=0.75]
+(189.63,44.28) .. controls (194.6,44.24) and (198.66,48.23) .. (198.7,53.21)
+-- (199.43,146.5) .. controls (199.47,151.47) and (195.47,155.53) .. (190.5,155.57)
+-- (151.1,155.88) .. controls (146.13,155.92) and (142.07,151.92) .. (142.03,146.95)
+-- (141.3,53.66) .. controls (141.26,48.69) and (145.26,44.62) .. (150.23,44.59) -- cycle ;
+
+%Shape: círculos (acero)
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (187,148.5) .. controls (187,145.46) and (189.46,143) .. (192.5,143) .. controls (195.54,143) and (198,145.46) .. (198,148.5) .. controls (198,151.54) and (195.54,154) .. (192.5,154) .. controls (189.46,154) and (187,151.54) .. (187,148.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (188,132.5) .. controls (188,129.46) and (190.46,127) .. (193.5,127) .. controls (196.54,127) and (199,129.46) .. (199,132.5) .. controls (199,135.54) and (196.54,138) .. (193.5,138) .. controls (190.46,138) and (188,135.54) .. (188,132.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (167,148.5) .. controls (167,145.46) and (169.46,143) .. (172.5,143) .. controls (175.54,143) and (178,145.46) .. (178,148.5) .. controls (178,151.54) and (175.54,154) .. (172.5,154) .. controls (169.46,154) and (167,151.54) .. (167,148.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,149.5) .. controls (143,146.46) and (145.46,144) .. (148.5,144) .. controls (151.54,144) and (154,146.46) .. (154,149.5) .. controls (154,152.54) and (151.54,155) .. (148.5,155) .. controls (145.46,155) and (143,152.54) .. (143,149.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,132.5) .. controls (143,129.46) and (145.46,127) .. (148.5,127) .. controls (151.54,127) and (154,129.46) .. (154,132.5) .. controls (154,135.54) and (151.54,138) .. (148.5,138) .. controls (145.46,138) and (143,135.54) .. (143,132.5) -- cycle ;
+
+% Líneas y textos
+\draw    (134.5,171.5) -- (208,171.99) ;
+\draw [shift={(210,172)}, rotate = 180.38] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (142.5,175.5) .. controls (138.96,173.18) and (135.43,171.81) .. (131.92,171.39) .. controls (135.42,170.86) and (138.89,169.37) .. (142.35,166.92) ;
+
+\draw    (122.54,161.22) -- (122.44,38.17) ;
+\draw [shift={(122.44,36.17)}, rotate = 89.95] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (126.47,148.01) .. controls (124.18,153.86) and (122.84,159.68) .. (122.45,165.49) .. controls (121.88,159.7) and (120.37,153.93) .. (117.9,148.17) ;
+
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (208.03,36.57) -- (228.95,36.14) -- (254,36.54) ;
+\draw [shift={(258,36.6)}, rotate = 180.91] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (8.13,-3.9) -- (0,0) -- (8.13,3.9) -- cycle ;
+
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (198,148.5) -- (220,148.6) -- (240,148.6) ;
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]    (240,148.6) -- (240,122.6) -- (239,38.6) ;
+
+\draw (136,185.4) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{{\textstyle b=30\ cm}}$};
+\draw (42,80.9) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{h=\ 50\ cm}$};
+\draw (237,22) node [anchor=north west][inner sep=0.75pt] [font=\small,color={rgb, 255:red, 74; green, 144; blue, 226 } ,opacity=1] {x};
+\draw (249.92,91.2) node [font=\scriptsize,xslant=0.3] {$d_2$};
+\draw (261.92,147.2) node [font=\tiny,xslant=0.3] {$3\O 3/4"$};
+
+\end{tikzpicture}%
+}
+
+\vspace{2mm}
+{\footnotesize \textit{Beam cross-section used to define the effective depth.}}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\vspace{0pt}
+
+% --- RECUADRO (NORMA) ---
+\begin{tcolorbox}[
+  colback=white,
+  colframe=orange!65!black,
+  boxrule=0.6pt,
+  arc=1mm,
+  left=5pt,
+  right=5pt,
+  top=6pt,
+  bottom=6pt
+]
+{\footnotesize
+\textbf{Recubrimiento (Cover):}
+
+\textbf{ES:} Según la \textbf{Norma Peruana E.060} y \textbf{ACI 318-14}, se adopta $r=4\ \text{cm}$.
+
+\textbf{EN:} According to \textbf{Peruvian Standard E.060} and \textbf{ACI 318-14}, the adopted cover is $r=4\ \text{cm}$.
+}
+\end{tcolorbox}
+
+\vspace{4mm}
+
+\textbf{Effective depth to the second layer:}
+
+\[
+d_2 = h - r - \phi_{\text{stirrup}} - \frac{\phi_{\text{bar}}}{2}
+\]
+
+\[
+d_2 = 50 - 4 - 0.953 - \frac{1.91}{2}
+\]
+
+\[
+\boxed{d_2 = 44.092\ \text{cm}}
+\]
+
+\end{minipage}
+\end{tcolorbox}
+
+% Pattern Info - DEBE IR ANTES DEL SUBSECTION
+\tikzset{
+pattern size/.store in=\mcSize, 
+pattern size = 5pt,
+pattern thickness/.store in=\mcThickness, 
+pattern thickness = 0.3pt,
+pattern radius/.store in=\mcRadius, 
+pattern radius = 1pt}
+\makeatletter
+\pgfutil@ifundefined{pgf@pattern@name@_4nf32mbwy}{
+\pgfdeclarepatternformonly[\mcRadius,\mcThickness,\mcSize]{_4nf32mbwy}
+{\pgfpoint{-0.5*\mcSize}{-0.5*\mcSize}}
+{\pgfpoint{0.5*\mcSize}{0.5*\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{\tikz@pattern@color}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathcircle\pgfpointorigin{\mcRadius}
+\pgfusepath{stroke}
+}}
+\makeatother
+\tikzset{every picture/.style={line width=0.75pt}}
+
+\subsection{Calculation of Effective Depth}
+
+\begin{tcolorbox}[
+  breakable,
+  colback=orange!12,
+  colframe=orange!65!black,
+  boxrule=0.9pt,
+  arc=1.5mm,
+  left=8pt,
+  right=8pt,
+  top=8pt,
+  bottom=8pt,
+  enhanced,
+  title=\textbf{Effective depth of reinforced beam},
+  fonttitle=\bfseries
+]
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\vspace{0pt}
+
+% --- FIGURA (TikZ) DENTRO DEL RECUADRO ---
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+
+%Shape: Rectangle (concreto)
+\draw  [color={rgb, 255:red, 128; green, 128; blue, 128 }  ,draw opacity=0.37 ]
+[fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=0.51 ][line width=0.75]
+(134.7,163.57) .. controls (133.6,163.58) and (132.7,162.69) .. (132.69,161.59)
+-- (131.75,39.15) .. controls (131.74,38.05) and (132.63,37.15) .. (133.73,37.14)
+-- (206.03,36.58) .. controls (207.13,36.58) and (208.04,37.46) .. (208.04,38.57)
+-- (208.98,161) .. controls (208.99,162.1) and (208.1,163.01) .. (207,163.02) -- cycle ;
+
+%Shape: Rectangle (estribo)
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=0.47 ]
+[pattern=_4nf32mbwy,pattern size=12.15pt,pattern thickness=0.75pt,pattern radius=0.75pt,
+ pattern color={rgb, 255:red, 74; green, 74; blue, 74}][line width=0.75]
+(189.63,44.28) .. controls (194.6,44.24) and (198.66,48.23) .. (198.7,53.21)
+-- (199.43,146.5) .. controls (199.47,151.47) and (195.47,155.53) .. (190.5,155.57)
+-- (151.1,155.88) .. controls (146.13,155.92) and (142.07,151.92) .. (142.03,146.95)
+-- (141.3,53.66) .. controls (141.26,48.69) and (145.26,44.62) .. (150.23,44.59) -- cycle ;
+
+%Shape: círculos (acero)
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (187,148.5) .. controls (187,145.46) and (189.46,143) .. (192.5,143) .. controls (195.54,143) and (198,145.46) .. (198,148.5) .. controls (198,151.54) and (195.54,154) .. (192.5,154) .. controls (189.46,154) and (187,151.54) .. (187,148.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (188,132.5) .. controls (188,129.46) and (190.46,127) .. (193.5,127) .. controls (196.54,127) and (199,129.46) .. (199,132.5) .. controls (199,135.54) and (196.54,138) .. (193.5,138) .. controls (190.46,138) and (188,135.54) .. (188,132.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (167,148.5) .. controls (167,145.46) and (169.46,143) .. (172.5,143) .. controls (175.54,143) and (178,145.46) .. (178,148.5) .. controls (178,151.54) and (175.54,154) .. (172.5,154) .. controls (169.46,154) and (167,151.54) .. (167,148.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,149.5) .. controls (143,146.46) and (145.46,144) .. (148.5,144) .. controls (151.54,144) and (154,146.46) .. (154,149.5) .. controls (154,152.54) and (151.54,155) .. (148.5,155) .. controls (145.46,155) and (143,152.54) .. (143,149.5) -- cycle ;
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,132.5) .. controls (143,129.46) and (145.46,127) .. (148.5,127) .. controls (151.54,127) and (154,129.46) .. (154,132.5) .. controls (154,135.54) and (151.54,138) .. (148.5,138) .. controls (145.46,138) and (143,135.54) .. (143,132.5) -- cycle ;
+
+% Líneas y textos
+\draw    (134.5,171.5) -- (208,171.99) ;
+\draw [shift={(210,172)}, rotate = 180.38] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (142.5,175.5) .. controls (138.96,173.18) and (135.43,171.81) .. (131.92,171.39) .. controls (135.42,170.86) and (138.89,169.37) .. (142.35,166.92) ;
+
+\draw    (122.54,161.22) -- (122.44,38.17) ;
+\draw [shift={(122.44,36.17)}, rotate = 89.95] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (126.47,148.01) .. controls (124.18,153.86) and (122.84,159.68) .. (122.45,165.49) .. controls (121.88,159.7) and (120.37,153.93) .. (117.9,148.17) ;
+
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (208.03,36.57) -- (228.95,36.14) -- (254,36.54) ;
+\draw [shift={(258,36.6)}, rotate = 180.91] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (8.13,-3.9) -- (0,0) -- (8.13,3.9) -- cycle ;
+
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (199,132.5) -- (221,132.6) -- (241,132.6) ;
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]    (241,132.6) -- (241,117.6) -- (240,40.6) ;
+
+\draw (136,185.4) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{{\textstyle b=30\ cm}}$};
+\draw (42,80.9) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{h=\ 50\ cm}$};
+\draw (237,22) node [anchor=north west][inner sep=0.75pt] [font=\small,color={rgb, 255:red, 74; green, 144; blue, 226 } ,opacity=1] {x};
+\draw (249.92,91.2) node [font=\scriptsize,xslant=0.3] {$d_1$};
+\draw (265.92,130.2) node [font=\tiny,xslant=0.3] {$2\O 5/8"$};
+\end{tikzpicture}%
+}
+
+\vspace{2mm}
+{\footnotesize \textit{Beam cross-section used to define the effective depth.}}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\vspace{0pt}
+
+% --- RECUADRO (NORMA) ---
+\begin{tcolorbox}[
+  colback=white,
+  colframe=orange!65!black,
+  boxrule=0.6pt,
+  arc=1mm,
+  left=5pt,
+  right=5pt,
+  top=6pt,
+  bottom=6pt
+]
+{\footnotesize
+\textbf{Recubrimiento (Cover):}
+
+\textbf{ES:} Según la \textbf{Norma Peruana E.060} y \textbf{ACI 318-14}, se adopta $r=4\ \text{cm}$.
+
+\textbf{EN:} According to \textbf{Peruvian Standard E.060} and \textbf{ACI 318-14}, the adopted cover is $r=4\ \text{cm}$.
+}
+\end{tcolorbox}
+
+\vspace{4mm}
+
+\textbf{Effective depth to the second layer:}
+
+\[
+d_1 = h - r - \phi_{\text{stirrup}} - \phi_{\text{bar1}} - \frac{\phi_{\text{bar2}}}{2}
+\]
+
+\[
+d_1 = h - r - \phi_{est} - \phi_{b1} - \text{1"} - \frac{\phi_{b2}}{2}
+\]
+
+\[
+\boxed{d_1 = 39.80\ \text{cm}}
+\]
+
+\end{minipage}
+
+\end{tcolorbox}
+\paragraph{Effective depth based on reinforcement layers.}
+Regarding the second-layer calculation, a standard clear spacing of \textbf{1 in} (face-to-face) is adopted between bars. 
+After determining the depth corresponding to each individual reinforcement layer, the total effective depth is computed as the \textbf{average position} of both layers. 
+Figure~\ref{fig:effective_depth_layers} shows the depth corresponding to each reinforcement layer.
+
+\begin{figure}[htbp]
+\centering
+
+% --- TU FIGURA (TikZ) ---
+% Pattern Info
+\tikzset{
+pattern size/.store in=\mcSize, 
+pattern size = 5pt,
+pattern thickness/.store in=\mcThickness, 
+pattern thickness = 0.3pt,
+pattern radius/.store in=\mcRadius, 
+pattern radius = 1pt}
+\makeatletter
+\pgfutil@ifundefined{pgf@pattern@name@_l57a3igvh}{
+\pgfdeclarepatternformonly[\mcRadius,\mcThickness,\mcSize]{_l57a3igvh}
+{\pgfpoint{-0.5*\mcSize}{-0.5*\mcSize}}
+{\pgfpoint{0.5*\mcSize}{0.5*\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{gray}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathcircle\pgfpointorigin{\mcRadius}
+\pgfusepath{stroke}
+}}
+\makeatother
+\tikzset{every picture/.style={line width=0.75pt}}
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,450); %set diagram left start at 0, and has height of 450
+
+%Shape: Rectangle [id:dp019278708762845542] 
+\draw  [color={rgb, 255:red, 128; green, 128; blue, 128 }  ,draw opacity=0.37 ][fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=0.51 ][line width=0.75]  (134.7,163.57) .. controls (133.6,163.58) and (132.7,162.69) .. (132.69,161.59) -- (131.75,39.15) .. controls (131.74,38.05) and (132.63,37.15) .. (133.73,37.14) -- (206.03,36.58) .. controls (207.13,36.58) and (208.04,37.46) .. (208.04,38.57) -- (208.98,161) .. controls (208.99,162.1) and (208.1,163.01) .. (207,163.02) -- cycle ;
+
+%Shape: Rectangle [id:dp45874838755509384] 
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=0.47 ][pattern=_l57a3igvh,pattern size=12.149999999999999pt,pattern thickness=0.75pt,pattern radius=0.75pt, pattern color={rgb, 255:red, 74; green, 74; blue, 74}][line width=0.75]  (189.63,44.28) .. controls (194.6,44.24) and (198.66,48.23) .. (198.7,53.21) -- (199.43,146.5) .. controls (199.47,151.47) and (195.47,155.53) .. (190.5,155.57) -- (151.1,155.88) .. controls (146.13,155.92) and (142.07,151.92) .. (142.03,146.95) -- (141.3,53.66) .. controls (141.26,48.69) and (145.26,44.62) .. (150.23,44.59) -- cycle ;
+
+%Shape: Circle [id:dp9911441263472799] 
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (187,148.5) .. controls (187,145.46) and (189.46,143) .. (192.5,143) .. controls (195.54,143) and (198,145.46) .. (198,148.5) .. controls (198,151.54) and (195.54,154) .. (192.5,154) .. controls (189.46,154) and (187,151.54) .. (187,148.5) -- cycle ;
+
+%Shape: Circle [id:dp6166223385692264] 
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (188,132.5) .. controls (188,129.46) and (190.46,127) .. (193.5,127) .. controls (196.54,127) and (199,129.46) .. (199,132.5) .. controls (199,135.54) and (196.54,138) .. (193.5,138) .. controls (190.46,138) and (188,135.54) .. (188,132.5) -- cycle ;
+
+%Shape: Circle [id:dp9408945519229378] 
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (167,148.5) .. controls (167,145.46) and (169.46,143) .. (172.5,143) .. controls (175.54,143) and (178,145.46) .. (178,148.5) .. controls (178,151.54) and (175.54,154) .. (172.5,154) .. controls (169.46,154) and (167,151.54) .. (167,148.5) -- cycle ;
+
+%Shape: Circle [id:dp6924190354891951] 
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,149.5) .. controls (143,146.46) and (145.46,144) .. (148.5,144) .. controls (151.54,144) and (154,146.46) .. (154,149.5) .. controls (154,152.54) and (151.54,155) .. (148.5,155) .. controls (145.46,155) and (143,152.54) .. (143,149.5) -- cycle ;
+
+%Shape: Circle [id:dp967195237997793] 
+\draw  [fill={rgb, 255:red, 155; green, 155; blue, 155 }  ,fill opacity=1 ] (143,132.5) .. controls (143,129.46) and (145.46,127) .. (148.5,127) .. controls (151.54,127) and (154,129.46) .. (154,132.5) .. controls (154,135.54) and (151.54,138) .. (148.5,138) .. controls (145.46,138) and (143,135.54) .. (143,132.5) -- cycle ;
+
+%Straight Lines [id:da08275596237053495] 
+\draw    (134.5,171.5) -- (208,171.99) ;
+\draw [shift={(210,172)}, rotate = 180.38] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (142.5,175.5) .. controls (138.96,173.18) and (135.43,171.81) .. (131.92,171.39) .. controls (135.42,170.86) and (138.89,169.37) .. (142.35,166.92) ;
+
+%Straight Lines [id:da23176717122414592] 
+\draw    (122.54,161.22) -- (122.44,38.17) ;
+\draw [shift={(122.44,36.17)}, rotate = 89.95] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+\draw   (126.47,148.01) .. controls (124.18,153.86) and (122.84,159.68) .. (122.45,165.49) .. controls (121.88,159.7) and (120.37,153.93) .. (117.9,148.17) ;
+
+%Straight Lines [id:da12455910951853455] 
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (208.03,36.57) -- (228.95,36.14) -- (254,36.54) ;
+\draw [shift={(258,36.6)}, rotate = 180.91] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (8.13,-3.9) -- (0,0) -- (8.13,3.9) -- cycle    ;
+
+%Straight Lines [id:da866100960813407] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (199,132.5) -- (215,132.6) ;
+
+%Straight Lines [id:da14627949508627736] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=0.75]    (215,132.6) -- (215,117.6) -- (214,40.6) ;
+
+%Straight Lines [id:da0014568169025426236] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=0.75]    (231,149.6) -- (233,42.6) ;
+
+%Straight Lines [id:da9477125519035912] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 192 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 1.69pt off 2.76pt}]  (198,148.5) -- (220,148.6) -- (231,149.6) ;
+
+%Straight Lines [id:da5341448393689587] 
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][fill={rgb, 255:red, 198; green, 32; blue, 32 }  ,fill opacity=1 ][line width=1.5]    (251,39.6) -- (250.03,140.6) ;
+\draw [shift={(250,143.6)}, rotate = 270.55] [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+
+% Text Node
+\draw (136,185.4) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{{\textstyle b=30\ cm}}$};
+\draw (42,80.9) node [anchor=north west][inner sep=0.75pt] {$\textcolor[rgb]{0.82,0.01,0.11}{h=\ 50\ cm}$};
+\draw (237,22) node [anchor=north west][inner sep=0.75pt] [font=\small,color={rgb, 255:red, 74; green, 144; blue, 226 },opacity=1] {x};
+\draw (223.92,95.2) node  [font=\scriptsize,xslant=0.3] {$d1$};
+\draw (240.92,96.2) node  [font=\scriptsize,xslant=0.3] {$d2$};
+\draw (262.92,95.2) node  [font=\scriptsize,xslant=0.3] {$d$};
+\draw (100.92,135.2) node  [font=\tiny,xslant=0.3] {$2\O 5/8"$};
+\draw (98.92,151.2) node  [font=\tiny,xslant=0.3] {$3\O 3/4"$};
+
+\end{tikzpicture}
+
+\caption{Effective depth calculation for reinforcement layers.}
+\label{fig:effective_depth_layers}
+\end{figure}
+
+\subsection{Centroid of Tensile Reinforcement}
+Next, the centroid of the tensile reinforcement is computed using the weighted-average expression:
+\[
+d=\frac{\left(2\,\phi\,5/8''\right)\,d_1+\left(3\,\phi\,3/4''\right)\,d_2}
+{\left(2\,\phi\,5/8''\right)+\left(3\,\phi\,3/4''\right)}
+\]
+\[
+d=\frac{\left(2\cdot 1.99\right)\cdot 39.80+\left(3\cdot 2.87\right)\cdot 44.09}
+{\left(2\cdot 1.99\right)+\left(3\cdot 2.87\right)}
+\]
+\[
+\boxed{d=42.74\ \text{cm}}
+\]
+\subsection{Calculation of Balanced Reinforcement Ratio}
+
+The balanced reinforcement ratio ($\rho_b$) represents the theoretical condition in which the concrete reaches its ultimate crushing strain simultaneously with the yielding of the tension reinforcement. This condition defines the transition between brittle and ductile failure modes and is commonly used as a reference in reinforced concrete design.
+
+The balanced reinforcement ratio is calculated using the following expression:
+\[
+\rho_b = \beta_1 \cdot 0.85 \cdot \frac{f'_c}{f_y}
+\left(\frac{6000}{6000 + f_y}\right)
+\]
+
+For the case under study, the material properties are:
+\[
+\beta_1 = 0.85, \quad f'_c = 210\ \mathrm{kg/cm^2}, \quad f_y = 4200\ \mathrm{kg/cm^2}
+\]
+
+Substituting these values into the equation:
+\[
+\rho_b = 0.85 \cdot 0.85 \cdot \frac{210}{4200}
+\left(\frac{6000}{6000 + 4200}\right)
+\]
+
+\[
+\rho_b = 0.02125
+\]
+
+\begin{tcolorbox}[
+    colback=gray!5,
+    colframe=black,
+    title={Note: Variation of the $\beta$ Factor with Concrete Strength},
+    fonttitle=\bfseries
+]
+\centering
+\includegraphics[width=0.85\linewidth]{relacion_beta_vs_fc_210.png}
+
+\vspace{4pt}
+
+\small
+Figure showing the relationship between the $\beta$ factor and the concrete compressive strength $f'_c$, highlighting the value corresponding to $f'_c = 210\ \mathrm{kg/cm^2}$ used in the calculation of the balanced reinforcement ratio.
+
+\end{tcolorbox}
+
+According to the most widely used design criteria for reinforced concrete, such as those based on ACI-type provisions, an increase in the concrete compressive strength $f'_c$ results in a modification of the stress distribution within the compression zone. As the value of $f'_c$ increases, the equivalent rectangular stress block becomes progressively thinner, reflecting the more brittle behavior of high-strength concrete. Consequently, the factor $\beta$ (or $\beta_1$), which defines the depth of the equivalent compression block, decreases as the concrete strength increases.
+
+For normal-strength concrete, the factor $\beta$ is commonly taken as a constant value equal to $0.85$. However, for higher values of $f'_c$, experimental evidence has shown that the assumption of a constant stress block overestimates the compression zone. For this reason, design codes adopt a linear reduction of the $\beta$ factor until a minimum value is reached.
+
+When the concrete compressive strength $f'_c$ is expressed in units of $\mathrm{kg/cm^2}$, a commonly used formulation, equivalent to that defined for $f'_c$ in MPa, is expressed as:
+\[
+\beta =
+\begin{cases}
+0.85, & \text{if } f'_c \leq 280\ \mathrm{kg/cm^2} \\[6pt]
+0.85 - 0.05\left(\dfrac{f'_c - 280}{70}\right), 
+& \text{if } 280 < f'_c < 560\ \mathrm{kg/cm^2} \\[10pt]
+0.65, & \text{if } f'_c \geq 560\ \mathrm{kg/cm^2}
+\end{cases}
+\]
+
+The lower bound value of $\beta = 0.65$ represents a conservative limit beyond which further increases in concrete strength do not lead to a proportional increase in the effective compression block depth. This limitation ensures that the design remains safe and consistent with the observed nonlinear stress distribution in high-strength concrete, particularly when evaluating balanced conditions and ductility requirements in flexural members.
+
+\subsection{Tension Reinforcement Ratio ($\rho$)}
+
+The tension reinforcement ratio ($\rho$) represents the proportion of longitudinal steel provided in the tension zone of the reinforced concrete section. It is defined as the ratio between the total area of tensile reinforcement $A_s$ and the effective concrete area $b\,d$, where $b$ is the width (base) of the cross-section and $d$ is the effective depth measured from the extreme compression fiber to the centroid of the tension reinforcement. This parameter is widely used to evaluate the flexural behavior of the section and to compare the provided reinforcement against balanced or minimum reinforcement requirements.
+
+The tension reinforcement ratio is computed as:
+\[
+\rho = \frac{A_s}{b\,d}
+\]
+
+For the section under study, the total tensile reinforcement area is:
+\[
+A_s = 8.61 + 3.97
+\]
+
+Thus, substituting the corresponding values:
+\[
+\rho = \frac{8.61 + 3.97}{30 \times 42.73}
+\]
+
+\[
+\rho = 0.0098
+\]
+
+where $A_s$ is the total area of tension steel, $b$ is the width of the cross-section, and $d$ is the effective depth of the section.
+\section{Results}
+
+This section summarizes the reinforcement ratio verification in accordance with ACI 318-14, based on the comparison between the balanced reinforcement ratio and the provided tension reinforcement ratio.
+
+The balanced reinforcement ratio was obtained as:
+\[
+\rho_b = 0.02125
+\]
+
+The provided tension reinforcement ratio was calculated as:
+\[
+\rho = 0.0098
+\]
+
+Since the provided ratio is lower than the balanced ratio,
+\[
+\rho < \rho_b,
+\]
+the section is classified as \textbf{\textcolor{red}{under-reinforced}}. Therefore, yielding of the tension steel is expected to occur prior to crushing of the concrete, which is associated with a \textbf{\textcolor{red}{ductile flexural behavior}}.
+
+\vspace{6pt}
+
+Additionally, ACI 318-14 limits the maximum reinforcement ratio to ensure adequate ductility. This limit is commonly expressed as:
+\[
+\rho_{\max} = 0.75\,\rho_b
+\]
+Thus,
+\[
+\rho_{\max} = 0.75 \times 0.02125 = \textcolor{red}{0.01594}
+\]
+
+Because:
+\[
+\rho = 0.0098 \le \rho_{\max} = 0.01594,
+\]
+the section \textbf{\textcolor{red}{meets the ductility requirement}} prescribed by ACI 318-14.
+
+\vspace{6pt}
+
+Finally, the minimum reinforcement ratio required to prevent sudden brittle failure is:
+\[
+\rho_{\min} = \frac{14}{f_y}
+\]
+For $f_y = 4200\ \mathrm{kg/cm^2}$:
+\[
+\rho_{\min} = \frac{14}{4200} = \textcolor{red}{0.0033}
+\]
+
+Since:
+\[
+\rho = 0.0098 > \rho_{\min} = 0.0033,
+\]
+the section \textbf{\textcolor{red}{satisfies the minimum steel requirement}}. Consequently, the reinforcement provided complies with the minimum and maximum reinforcement limits and is consistent with the flexural design provisions of \textbf{ACI 318-14}.
+\section{Conclusions}
+
+Based on the analysis carried out for the reinforced concrete section, the following conclusions are drawn in accordance with the provisions of ACI 318-14:
+
+\begin{itemize}
+    \item The balanced reinforcement ratio was determined as $\rho_b = 0.02125$, which represents the theoretical limit between ductile and brittle flexural behavior.
+
+    \item The provided tension reinforcement ratio, $\rho = 0.0098$, is lower than the balanced reinforcement ratio ($\rho < \rho_b$). This condition confirms that the section is \textbf{\textcolor{red}{under-reinforced}}, ensuring that yielding of the tension steel occurs prior to concrete crushing.
+
+    \item The maximum reinforcement ratio established to guarantee ductility was calculated as $\rho_{\max} = 0.01594$. Since the provided reinforcement ratio satisfies $\rho \le \rho_{\max}$, the section exhibits a \textbf{\textcolor{red}{ductile flexural behavior}} consistent with ACI 318-14 requirements.
+
+    \item The minimum reinforcement ratio was computed as $\rho_{\min} = 0.0033$. The provided reinforcement ratio exceeds this limit ($\rho > \rho_{\min}$), indicating that the section \textbf{\textcolor{red}{meets the minimum steel requirement}} and avoids the risk of sudden brittle failure.
+
+    \item Overall, the reinforcement provided satisfies both minimum and maximum reinforcement criteria, and the section complies with the flexural design provisions and ductility requirements prescribed by \textbf{ACI 318-14}.
+\end{itemize}
+
+The results confirm that the selected reinforcement configuration leads to a safe and ductile structural response, making it suitable for practical reinforced concrete design applications.
+\begin{tcolorbox}[
+    colback=green!5,
+    colframe=green!50!black,
+    title={Nota del Autor / Author's Note},
+    fonttitle=\bfseries
+]
+
+\textbf{Español}
+
+Mi nombre es \textbf{Alexander Milkenson}, bachiller en Ingeniería Civil.  
+El presente ejercicio corresponde al análisis de una sección de \textbf{concreto armado} y ha sido desarrollado con fines estrictamente educativos y académicos. Su objetivo principal es ilustrar el procedimiento de determinación de la cuantía balanceada, la cuantía de acero a tracción y la verificación de los criterios de ductilidad establecidos por la normativa ACI 318-14.  
+Los resultados obtenidos permiten comprender el comportamiento estructural de elementos a flexión y no deben ser utilizados directamente para el diseño de estructuras reales sin una revisión profesional adecuada.
+
+\vspace{6pt}
+
+\textbf{English}
+
+My name is \textbf{Alexander Milkenson}, Bachelor of Civil Engineering.  
+This exercise corresponds to the analysis of a \textbf{reinforced concrete} section and has been developed strictly for educational and academic purposes. Its main objective is to illustrate the procedure for determining the balanced reinforcement ratio, the tension reinforcement ratio, and the verification of ductility requirements established by ACI 318-14.  
+The results presented herein are intended to support learning and understanding of flexural behavior and should not be directly applied to real structural design without proper professional review.
+
+\end{tcolorbox}
+
+\end{itemize}
+\end{document}
